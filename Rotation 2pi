@@ -1,0 +1,94 @@
+from math import *
+import numpy as np
+import matplotlib.pyplot as plt 
+### ici la planète tourne dans le sens anti-horraire
+
+##### le programme ne calcule pas la zone d'influence et le montre pas les changement de direction 
+##### pour la rentrée, calculer le changement de direction du à la planète, et si, avec la vitesse de la fusée, on peut sortir de la zone 
+##### d'influence de la planète, ie si l'EM est suffisante. 
+
+###fonctions 
+# Il faut de grandes de valeurs de a et b pour que ca fonctionne correctement 
+a=500
+b=400
+def f_plus(x) : 
+	return(b*sqrt(1 - (x/a)**2))
+
+def f_moins(x) : 
+	return(-b*sqrt(1 - (x/a)**2))
+
+def g(x):
+	return(0.2*x - 150)
+
+#reglage de la vitesse des satellites
+r = 1 #ne pas être > à 1
+
+#Condition initale du satellite
+c = 0 
+
+###la boucle
+
+#on peut régler les vitesses des satellites ou du point sur la droite en mettant un coefficient devant le t des fonction des elipses
+condition = False
+t=-a+1
+w=-a+c
+
+while condition != True and t != 1000: #faire tourner le point sur les ellipses
+	if w == a : 		
+		i = int(f_plus(r*w)-1)   #définition de l'intervalle à chaque iténation
+		j = int(f_plus(r*w)+2)  
+		
+		#test pour chaque cas possible pour eviter le problème de range
+
+		if i < j :
+			if int(g(t)) in range(i,j):   #condition sur les images
+				if t in range(w-1,w+2):	  #condition sur les abscisses
+					condition = True
+					print("Choc ! A t = ",t)
+					print("En effet g(t)=",int(g(t)),"et f_plus(t)=",int(f_plus(t)))
+		else :
+			if int(g(t)) in range(j,i):
+				if t in range(w-1,w+2):
+					condition = True
+					print("Choc ! A t = ",t)
+					print("En effet g(t)=",int(g(t)),"et f_plus(t)=",int(f_plus(t)))
+		t += 1
+		w -= 1
+
+	else :
+		#définition de l'intervalle à chaque iténation
+		# "1*" pour montrer qu'on peut définir les vitesse 
+		k = int(f_moins(r*w)-1)  # et ne peut pas être supérieur à 1
+		l = int(f_moins(r*w)+2)
+
+		#test pour chaque cas possible pour eviter le problème de range
+
+		if k < l :
+			if int(g(t)) in range(k,l):  #condition sur les images
+				if t in range(w-1,w+2):	 #condition sur les abscisses
+					condition = True
+					print("Choc ! A t = ",t)
+					print("En effet g(t)=",int(g(t)),"et f_moins(t)=",int(f_moins(t)))
+		
+		else :
+			if int(g(t)) in range(l,k):
+				if t in range(w-1,w+2):
+					condition = True
+					print("Choc ! A t = ",t)
+					print("En effet g(t)=",int(g(t)),"et f_moins(t)=",int(f_moins(t)))
+
+		t += 1
+		w += 1
+
+
+print("Fin !")
+
+#un graphe pour visualiser 
+
+x = np.linspace(-a,a,2000)
+Y1=[f_plus(p) for p in x]
+Y2=[f_moins(p) for p in x]
+Y3=[g(p) for p in x]
+plt.plot(x, Y1, x, Y2, x, Y3)
+plt.show()
+
