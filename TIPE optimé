@@ -1,0 +1,34 @@
+import matplotlib.pyplot as plt
+import numpy as np
+from math import *
+plt.close()
+
+a = [57.9,108.2,149.6,227.9,778.3,1426.7,2870.7,4498.4]
+e = [0.21,0.0068,0.016,0.093,0.048,0.054,0.047,0.0086]
+b = [56.60891024388298, 108.19749838708103, 149.5808499743199, 226.91230617115062, 777.4028813616785, 1424.6183527712817, 2867.5275589008015, 4498.233646092059]
+#multiplier les valeurs d'une liste, a = [i*k for i in a]
+
+### calcul de b
+
+# for i in range(len(a)):
+# 	B = a[i]*np.sqrt(1-e[i]**2)
+# 	b.append(B)
+
+### équation paramétrique
+def f_cos(t,i):
+	return(a[i]*cos(t))
+def f_sin(t,i):
+	return(b[i]*sin(t))
+
+X=[] #liste des fonctions cos
+Y=[] #liste des fonctions sin
+
+for i in range(len(a)):
+	x = [f_cos(j,i) for j in np.linspace(0,2*pi,1000)]
+	X.append(x)
+	y = [f_sin(j,i) for j in np.linspace(0,2*pi,1000)]
+	Y.append(y)
+plt.plot(X[0],Y[0],X[1],Y[1],X[3],Y[3],X[4],Y[4],X[5],Y[5],X[6],Y[6],X[7],Y[7])
+plt.axis('scaled')
+plt.show()
+
